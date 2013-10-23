@@ -1,4 +1,4 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;

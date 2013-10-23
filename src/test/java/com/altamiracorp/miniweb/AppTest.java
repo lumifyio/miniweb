@@ -1,4 +1,4 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

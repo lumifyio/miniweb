@@ -1,4 +1,4 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

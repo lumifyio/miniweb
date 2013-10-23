@@ -1,4 +1,4 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,6 +1,6 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
-import com.altamiracorp.web.utils.UrlUtils;
+import com.altamiracorp.miniweb.utils.UrlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;

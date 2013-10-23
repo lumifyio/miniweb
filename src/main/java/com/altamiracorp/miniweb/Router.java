@@ -1,6 +1,6 @@
-package com.altamiracorp.web;
+package com.altamiracorp.miniweb;
 
-import com.altamiracorp.web.Route.Method;
+import com.altamiracorp.miniweb.Route.Method;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;

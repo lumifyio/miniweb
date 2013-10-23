@@ -1,4 +1,4 @@
-package com.altamiracorp.web.utils;
+package com.altamiracorp.miniweb.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
