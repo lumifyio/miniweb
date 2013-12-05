@@ -1,4 +1,4 @@
-zzzpackage com.altamiracorp.miniweb;
+package com.altamiracorp.miniweb;
 
 import com.altamiracorp.miniweb.utils.UrlUtils;
 
