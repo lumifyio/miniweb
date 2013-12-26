@@ -43,6 +43,7 @@ public class RouterTest {
         router.addRoute(Method.GET, path, handler);
         when(request.getMethod()).thenReturn(Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
+        when(request.getContextPath()).thenReturn("");
         router.route(request, response);
         verify(handler).handle(eq(request), eq(response), any(HandlerChain.class));
     }
@@ -52,6 +53,7 @@ public class RouterTest {
         router.addRoute(Method.GET, path + "/{id}/text", handler);
         when(request.getMethod()).thenReturn(Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "/25/text");
+        when(request.getContextPath()).thenReturn("");
         router.route(request, response);
         verify(handler).handle(eq(request), eq(response), any(HandlerChain.class));
         verify(request).setAttribute("id", "25");
@@ -72,6 +74,7 @@ public class RouterTest {
         router.addRoute(Method.GET, path, handler);
         when(request.getMethod()).thenReturn(Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "extra");
+        when(request.getContextPath()).thenReturn("");
         when(servletContext.getNamedDispatcher(anyString())).thenReturn(requestDispatcher);
         router.route(request, response);
         verify(requestDispatcher).forward(any(HttpServletRequest.class), any(HttpServletResponse.class));
@@ -83,6 +86,7 @@ public class RouterTest {
         router.addRoute(Method.GET, path, h2, handler);
         when(request.getMethod()).thenReturn(Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
+        when(request.getContextPath()).thenReturn("");
         router.route(request, response);
         verify(handler).handle(eq(request), eq(response), any(HandlerChain.class));
     }
