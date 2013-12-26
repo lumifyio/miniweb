@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 public class Route {
     public static enum Method {GET, POST, PUT, DELETE}
 
-    ;
-
     private Method method;
     private String path;
     private Handler[] handlers;
@@ -31,7 +29,9 @@ public class Route {
             return false;
         }
 
-        String[] requestPathComponents = splitPathComponents(request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String[] requestPathComponents = splitPathComponents(requestURI.substring(contextPath.length()));
         if (requestPathComponents.length != routePathComponents.length) {
             return false;
         }
@@ -65,7 +65,7 @@ public class Route {
 
     private String[] splitPathComponents(String path) {
         String[] components = path.split("/");
-        if (components.length > 0){
+        if (components.length > 0) {
             String[] lastComponents = components[components.length - 1].split("\\.");
             if (lastComponents.length > 1) {
                 String[] allComponents = new String[components.length - 1 + lastComponents.length];
