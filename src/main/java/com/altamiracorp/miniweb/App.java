@@ -1,6 +1,8 @@
 package com.altamiracorp.miniweb;
 
 import com.altamiracorp.miniweb.Route.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class App {
+    private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
     private Router router;
     private Map<String, Object> config;
 
@@ -98,7 +101,16 @@ public class App {
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        router.route(request, response);
+        long startTime = System.nanoTime();
+        try {
+            router.route(request, response);
+        } finally {
+            if (LOGGER.isDebugEnabled()) {
+                long endTime = System.nanoTime();
+                long timems = (endTime - startTime) / 1000 / 1000;
+                LOGGER.debug(request.getMethod() + " " + request.getRequestURI() + " " + timems + "ms");
+            }
+        }
     }
 
     protected Handler[] instantiateHandlers(Class<? extends Handler>[] handlerClasses) throws Exception {
