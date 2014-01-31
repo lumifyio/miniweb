@@ -60,6 +60,34 @@ public class RouterTest {
     }
 
     @Test
+    public void testMultipleRoutesWithSamePrefix() throws Exception {
+        router.addRoute(Method.GET, path + "/{id}/text", handler);
+        Route routeRaw = router.addRoute(Method.GET, path + "/{id}/raw", handler);
+        router.addRoute(Method.GET, path + "/{id}", handler);
+        when(request.getMethod()).thenReturn(Method.GET.toString());
+        when(request.getRequestURI()).thenReturn(path + "/25/raw");
+        when(request.getContextPath()).thenReturn("");
+        router.route(request, response);
+        verify(handler).handle(eq(request), eq(response), any(HandlerChain.class));
+        verify(request).setAttribute("id", "25");
+        verify(request).setAttribute(Route.MATCHED_ROUTE, routeRaw);
+    }
+
+    @Test
+    public void testMultipleRoutesWithSamePrefixLastMatch() throws Exception {
+        router.addRoute(Method.GET, path + "/{id}/text", handler);
+        router.addRoute(Method.GET, path + "/{id}/raw", handler);
+        Route defaultRoute = router.addRoute(Method.GET, path + "/{id}", handler);
+        when(request.getMethod()).thenReturn(Method.GET.toString());
+        when(request.getRequestURI()).thenReturn(path + "/25/zzz");
+        when(request.getContextPath()).thenReturn("");
+        router.route(request, response);
+        verify(handler).handle(eq(request), eq(response), any(HandlerChain.class));
+        verify(request).setAttribute("id", "25/zzz");
+        verify(request).setAttribute(Route.MATCHED_ROUTE, defaultRoute);
+    }
+
+    @Test
     public void testRouteMissingDueToMethod() throws Exception {
         router.addRoute(Method.GET, path, handler);
         when(request.getMethod()).thenReturn(Method.POST.toString());

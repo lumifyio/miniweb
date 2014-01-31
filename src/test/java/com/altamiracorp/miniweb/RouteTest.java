@@ -88,25 +88,57 @@ public class RouteTest {
         verify(request).setAttribute("file", "less");
     }
 
-    @Test
-    public void testWithGlob() {
-        Route r = new Route(Method.GET, path + "/folder/{name}/*", handler);
+    public void testWithRegexSpecialCharacters() {
+        Route r = new Route(Method.GET, path + "\\^$.|?*+()[]", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
-        when(request.getRequestURI()).thenReturn(path + "/folder/a/less.ext");
+        when(request.getRequestURI()).thenReturn(path + "\\^$.|?*+()[]");
         when(request.getContextPath()).thenReturn("");
         assertTrue(r.isMatch(request));
-        verify(request).setAttribute("name", "a");
     }
 
     @Test
-    public void testWithDeepGlob() {
-        Route r = new Route(Method.GET, path + "/folder/{name}/*", handler);
+    public void testRestStyleUrlWithSpecialCharactersAndKnownTail() {
+        Route r = new Route(Method.GET, path + "/{resourceName}/data.json", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
-        when(request.getRequestURI()).thenReturn(path + "/folder/a/b/less.ext");
+        when(request.getRequestURI()).thenReturn(path + "/test@test.com/other/data.json");
         when(request.getContextPath()).thenReturn("");
         assertTrue(r.isMatch(request));
-        verify(request).setAttribute("name", "a");
+        verify(request).setAttribute("resourceName", "test@test.com/other");
+    }
+
+    @Test
+    public void testRestStyleUrlWithSpecialCharacters() {
+        Route r = new Route(Method.GET, path + "/{resourceName*}/{file}.{ext}", handler);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn(path + "/test@test.com/other/less.ext");
+        when(request.getContextPath()).thenReturn("");
+        assertTrue(r.isMatch(request));
+        verify(request).setAttribute("resourceName", "test@test.com/other");
+        verify(request).setAttribute("file", "less");
+        verify(request).setAttribute("ext", "ext");
+    }
+
+    @Test
+    public void testRegexRoute() {
+        Route r = new Route(Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn(path + "/1283723/end");
+        when(request.getContextPath()).thenReturn("");
+        assertTrue(r.isMatch(request));
+        verify(request).setAttribute("resourceName", "1283723");
+    }
+
+    @Test
+    public void testRegexRouteNoMatch() {
+        Route r = new Route(Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn(path + "/128a3723/end");
+        when(request.getContextPath()).thenReturn("");
+        assertFalse(r.isMatch(request));
     }
 }

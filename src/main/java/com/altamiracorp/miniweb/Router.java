@@ -24,10 +24,11 @@ public class Router {
         routes.put(Method.DELETE, new ArrayList<Route>());
     }
 
-    public void addRoute(Method method, String path, Handler... handlers) {
+    public Route addRoute(Method method, String path, Handler... handlers) {
         List<Route> methodRoutes = routes.get(method);
         Route route = new Route(method, path, handlers);
         methodRoutes.add(route);
+        return route;
     }
 
     public void route(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,7 +44,9 @@ public class Router {
         if (route == null) {
             RequestDispatcher rd = servletConfig.getServletContext().getNamedDispatcher("default");
             HttpServletRequest wrapped = new HttpServletRequestWrapper(request) {
-                public String getServletPath() { return ""; }
+                public String getServletPath() {
+                    return "";
+                }
             };
             rd.forward(wrapped, response);
         } else {
