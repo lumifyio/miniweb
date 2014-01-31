@@ -87,4 +87,26 @@ public class RouteTest {
         assertTrue(r.isMatch(request));
         verify(request).setAttribute("file", "less");
     }
+
+    @Test
+    public void testWithGlob() {
+        Route r = new Route(Method.GET, path + "/folder/{name}/*", handler);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn(path + "/folder/a/less.ext");
+        when(request.getContextPath()).thenReturn("");
+        assertTrue(r.isMatch(request));
+        verify(request).setAttribute("name", "a");
+    }
+
+    @Test
+    public void testWithDeepGlob() {
+        Route r = new Route(Method.GET, path + "/folder/{name}/*", handler);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn(path + "/folder/a/b/less.ext");
+        when(request.getContextPath()).thenReturn("");
+        assertTrue(r.isMatch(request));
+        verify(request).setAttribute("name", "a");
+    }
 }

@@ -15,12 +15,18 @@ public class Route {
 
     private Pattern componentPattern = Pattern.compile("\\{([_a-zA-Z]+)\\}");
     private String[] routePathComponents;
+    private boolean globPattern = false;
 
     public Route(Method method, String path, Handler... handlers) {
         this.method = method;
         this.path = path;
         this.handlers = handlers;
         routePathComponents = splitPathComponents(path);
+
+        if (routePathComponents.length > 0) {
+            String last = routePathComponents[routePathComponents.length - 1];
+            globPattern = last.equals("*");
+        }
     }
 
     public boolean isMatch(HttpServletRequest request) {
@@ -32,7 +38,12 @@ public class Route {
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String[] requestPathComponents = splitPathComponents(requestURI.substring(contextPath.length()));
-        if (requestPathComponents.length != routePathComponents.length) {
+
+        if (globPattern && requestPathComponents.length < routePathComponents.length) {
+            return false;
+        }
+
+        if (!globPattern && requestPathComponents.length != routePathComponents.length) {
             return false;
         }
 
@@ -43,7 +54,7 @@ public class Route {
             Matcher matcher = componentPattern.matcher(routeComponent);
             if (matcher.matches()) {
                 request.setAttribute(matcher.group(1), requestComponent);
-            } else if (!routeComponent.equals(requestComponent)) {
+            } else if (!routeComponent.equals(requestComponent) && !(globPattern && routeComponent.equals("*"))) {
                 return false;
             }
         }
