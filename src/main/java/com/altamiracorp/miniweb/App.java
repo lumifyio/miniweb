@@ -72,6 +72,19 @@ public class App {
         }
     }
 
+    public void onException(Class<? extends Exception> exceptionClass, Handler... handlers) {
+        router.addExceptionHandler(exceptionClass, handlers);
+    }
+
+    public void onException(Class<? extends Exception> exceptionClass, Class<? extends Handler>... classes) {
+        try {
+            Handler[] handlers = instantiateHandlers(classes);
+            onException(exceptionClass, handlers);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Object get(String name) {
         return config.get(name);
     }

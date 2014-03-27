@@ -65,7 +65,23 @@ public class AppTest {
     }
 
     @Test
-    public void testExceptionInHandler() throws Exception {
+    public void testCaughtExceptionInHandler() throws Exception {
+        handler = new Handler() {
+            @Override
+            public void handle(HttpServletRequest request, HttpServletResponse response, HandlerChain chain) throws Exception {
+                throw new ArrayStoreException("boom");
+            }
+        };
+        app.post(path, handler);
+        app.onException(ArrayStoreException.class, new TestHandler());
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getRequestURI()).thenReturn(path);
+        when(request.getContextPath()).thenReturn("");
+        app.handle(request, response);
+    }
+
+    @Test(expected = Exception.class)
+    public void testUnhandledExceptionInHandler() throws Exception {
         handler = new Handler() {
             @Override
             public void handle(HttpServletRequest request, HttpServletResponse response, HandlerChain chain) throws Exception {
@@ -76,12 +92,7 @@ public class AppTest {
         when(request.getMethod()).thenReturn("POST");
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
-        try {
-            app.handle(request, response);
-            fail("exception should have been thrown");
-        } catch (Exception e) {
-            assertEquals("boom", e.getMessage());
-        }
+        app.handle(request, response);
     }
 
     @Test

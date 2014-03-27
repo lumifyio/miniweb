@@ -1,6 +1,8 @@
 package com.altamiracorp.miniweb;
 
 import com.altamiracorp.miniweb.Route.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -13,8 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Router {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Router.class);
+
     private ServletConfig servletConfig;
     private Map<Method, List<Route>> routes = new HashMap<Method, List<Route>>();
+    Map<Class<? extends Exception>, Handler[]> exceptionHandlers = new HashMap<Class<? extends Exception>, Handler[]>();
 
     public Router(ServletConfig servletConfig) {
         this.servletConfig = servletConfig;
@@ -31,7 +36,25 @@ public class Router {
         return route;
     }
 
+    public void addExceptionHandler(Class<? extends Exception> exceptionClass, Handler[] handlers) {
+        exceptionHandlers.put(exceptionClass, handlers);
+    }
+
     public void route(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            routeWithExceptionHandling(request, response);
+        } catch(Exception ex) {
+            Handler[] handlers = exceptionHandlers.get(ex.getClass());
+            if (handlers != null && handlers.length > 0) {
+                LOGGER.error("Caught exception in route", ex);
+                dispatch(handlers, request, response);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    private void routeWithExceptionHandling(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Method method = Method.valueOf(request.getMethod().toUpperCase());
 
         if (method == null) {
@@ -51,9 +74,13 @@ public class Router {
             rd.forward(wrapped, response);
         } else {
             Handler[] handlers = route.getHandlers();
-            HandlerChain chain = new HandlerChain(handlers);
-            chain.next(request, response);
+            dispatch(handlers, request, response);
         }
+    }
+
+    private void dispatch(Handler[] handlers, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HandlerChain chain = new HandlerChain(handlers);
+        chain.next(request, response);
     }
 
     private Route findRoute(Method method, HttpServletRequest request) {
