@@ -8,15 +8,33 @@ import javax.servlet.http.HttpServletResponse;
 
 public class StaticFileHandler implements Handler {
     private final RequestDispatcher handler;
+    private final String pathInfo;
 
     public StaticFileHandler(ServletConfig config) {
-        handler = config.getServletContext().getNamedDispatcher("default");
+        this(config, null);
+    }
+
+    public StaticFileHandler(ServletConfig config, String pathInfo) {
+        this.handler = config.getServletContext().getNamedDispatcher("default");
+        this.pathInfo = pathInfo;
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerChain chain) throws Exception {
         HttpServletRequest wrapped = new HttpServletRequestWrapper(request) {
-            public String getServletPath() { return ""; }
+            @Override
+            public String getServletPath() {
+                return "";
+            }
+
+            @Override
+            public String getPathInfo() {
+                if (pathInfo == null) {
+                    return super.getPathInfo();
+                } else {
+                    return pathInfo;
+                }
+            }
         };
         handler.forward(wrapped, response);
     }
