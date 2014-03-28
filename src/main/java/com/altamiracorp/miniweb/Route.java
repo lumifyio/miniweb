@@ -90,6 +90,9 @@ public class Route {
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String uri = requestURI.substring(contextPath.length());
+        if (uri.length() == 0) {
+            uri = "/";
+        }
         Matcher m = this.routePathPattern.matcher(uri);
         if (!m.matches()) {
             return false;
