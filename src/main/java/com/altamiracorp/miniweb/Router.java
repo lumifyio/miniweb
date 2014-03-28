@@ -43,7 +43,7 @@ public class Router {
     public void route(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             routeWithExceptionHandling(request, response);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Handler[] handlers = exceptionHandlers.get(ex.getClass());
             if (handlers != null && handlers.length > 0) {
                 LOGGER.error("Caught exception in route", ex);
@@ -62,7 +62,15 @@ public class Router {
             return;
         }
 
-        Route route = findRoute(method, request);
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String relativeUri = requestURI.substring(contextPath.length());
+        if (relativeUri.length() == 0) {
+            response.sendRedirect(contextPath + '/');
+            return;
+        }
+
+        Route route = findRoute(method, request, relativeUri);
 
         if (route == null) {
             RequestDispatcher rd = servletConfig.getServletContext().getNamedDispatcher("default");
@@ -83,10 +91,10 @@ public class Router {
         chain.next(request, response);
     }
 
-    private Route findRoute(Method method, HttpServletRequest request) {
+    private Route findRoute(Method method, HttpServletRequest request, String relativeUri) {
         List<Route> potentialRoutes = routes.get(method);
         for (Route route : potentialRoutes) {
-            if (route.isMatch(request)) {
+            if (route.isMatch(request, relativeUri)) {
                 return route;
             }
         }
