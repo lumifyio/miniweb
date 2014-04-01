@@ -64,6 +64,9 @@ public class Router {
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
+        if (contextPath == null) {
+            contextPath = "";
+        }
         String relativeUri = requestURI.substring(contextPath.length());
         if (relativeUri.length() == 0) {
             response.sendRedirect(contextPath + '/');

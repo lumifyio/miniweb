@@ -81,6 +81,16 @@ public class Route {
         return false;
     }
 
+    public boolean isMatch(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        if (contextPath == null) {
+            contextPath = "";
+        }
+        String relativeUri = requestURI.substring(contextPath.length());
+        return isMatch(request, relativeUri);
+    }
+
     public boolean isMatch(HttpServletRequest request, String relativeUri) {
         Method requestMethod = Method.valueOf(request.getMethod().toUpperCase());
         if (!requestMethod.equals(method)) {
