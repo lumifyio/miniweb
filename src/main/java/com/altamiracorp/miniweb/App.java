@@ -113,6 +113,10 @@ public class App {
         return !isEnabled(name);
     }
 
+    public Router getRouter() {
+        return router;
+    }
+
     public void handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
         long startTime = System.nanoTime();
         try {

@@ -103,4 +103,8 @@ public class Router {
         }
         return null;
     }
+
+    public Map<Method, List<Route>> getRoutes() {
+        return routes;
+    }
 }
