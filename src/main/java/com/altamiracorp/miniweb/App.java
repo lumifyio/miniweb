@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class App {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+    private static final String MINIWEB_APP_ATTRIBUTE_NAME = "miniwebApp";
     private Router router;
     private Map<String, Object> config;
 
@@ -117,9 +118,14 @@ public class App {
         return router;
     }
 
+    public static App getApp(HttpServletRequest request) {
+        return (App) request.getAttribute(MINIWEB_APP_ATTRIBUTE_NAME);
+    }
+
     public void handle(HttpServletRequest request, HttpServletResponse response) throws Exception {
         long startTime = System.nanoTime();
         try {
+            request.setAttribute(MINIWEB_APP_ATTRIBUTE_NAME, this);
             router.route(request, response);
         } finally {
             if (LOGGER.isDebugEnabled()) {
