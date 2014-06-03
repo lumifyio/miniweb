@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 @RunWith(JUnit4.class)
 public class CSRFHandlerTest {
     private static final String TOKEN_PARAM = "csrfToken";
+    private static final String TOKEN_HEADER = "Csrf-Token-Header";
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HandlerChain chain;
@@ -27,7 +28,7 @@ public class CSRFHandlerTest {
 
     @Before
     public void setup() {
-        handler = new CSRFHandler(TOKEN_PARAM);
+        handler = new CSRFHandler(TOKEN_PARAM, TOKEN_HEADER);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
@@ -100,12 +101,25 @@ public class CSRFHandlerTest {
     }
 
     @Test
-    public void testPostRequestWithMatchingCsrfTokens() throws Exception {
+    public void testPostRequestWithMatchingCsrfTokensInParameter() throws Exception {
         String token = generateToken();
         when(request.getMethod()).thenReturn("POST");
         when(request.getSession(false)).thenReturn(session);
         when(session.getAttribute(CSRFHandler.CSRF_TOKEN_ATTR)).thenReturn(token);
+        when(request.getHeader(TOKEN_HEADER)).thenReturn(token + "a");
         when(request.getParameter(TOKEN_PARAM)).thenReturn(token);
+        handler.handle(request, response, chain);
+        verify(chain).next(request, response);
+    }
+
+    @Test
+    public void testPostRequestWithMatchingCsrfTokensInHeader() throws Exception {
+        String token = generateToken();
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute(CSRFHandler.CSRF_TOKEN_ATTR)).thenReturn(token);
+        when(request.getParameter(TOKEN_PARAM)).thenReturn(null);
+        when(request.getHeader(TOKEN_HEADER)).thenReturn(token);
         handler.handle(request, response, chain);
         verify(chain).next(request, response);
     }
