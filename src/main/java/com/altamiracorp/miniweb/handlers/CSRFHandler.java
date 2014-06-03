@@ -13,6 +13,7 @@ public class CSRFHandler implements Handler {
     public static final String CSRF_TOKEN_ATTR = "miniweb.csrf.token";
 
     private final String tokenRequestParameterName;
+    private final String tokenRequestHeaderName;
 
     public static String getSavedToken(HttpServletRequest request) {
         return getSavedToken(request, false);
@@ -47,6 +48,12 @@ public class CSRFHandler implements Handler {
 
     public CSRFHandler(String tokenRequestParameterName) {
         this.tokenRequestParameterName = tokenRequestParameterName;
+        this.tokenRequestHeaderName = null;
+    }
+
+    public CSRFHandler(String tokenRequestParameterName, String tokenRequestHeaderName) {
+        this.tokenRequestParameterName = tokenRequestParameterName;
+        this.tokenRequestHeaderName = tokenRequestHeaderName;
     }
 
     @Override
@@ -83,7 +90,17 @@ public class CSRFHandler implements Handler {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        return request.getParameter(this.tokenRequestParameterName);
+        String token = null;
+
+        if (this.tokenRequestParameterName != null) {
+            token = request.getParameter(this.tokenRequestParameterName);
+        }
+
+        if (token == null && this.tokenRequestHeaderName != null) {
+            token = request.getHeader(this.tokenRequestHeaderName);
+        }
+
+        return token;
     }
 
     public class TokenException extends Exception {
