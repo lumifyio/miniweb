@@ -6,13 +6,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -26,7 +23,6 @@ public class AppTest {
     private HttpServletResponse response;
     private RequestDispatcher requestDispatcher;
     private ServletContext servletContext;
-    private ServletConfig servletConfig;
     private App app;
 
     @Before
@@ -36,11 +32,7 @@ public class AppTest {
         response = mock(HttpServletResponse.class);
         requestDispatcher = mock(RequestDispatcher.class);
         servletContext = mock(ServletContext.class);
-        servletConfig = mock(ServletConfig.class);
-
-        app = new App(servletConfig);
-
-        when(servletConfig.getServletContext()).thenReturn(servletContext);
+        app = new App(servletContext);
     }
 
     @Test

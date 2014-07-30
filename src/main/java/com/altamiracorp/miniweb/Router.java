@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -17,12 +17,12 @@ import java.util.Map;
 public class Router {
     private static final Logger LOGGER = LoggerFactory.getLogger(Router.class);
 
-    private ServletConfig servletConfig;
+    private ServletContext servletContext;
     private Map<Method, List<Route>> routes = new HashMap<Method, List<Route>>();
     Map<Class<? extends Exception>, Handler[]> exceptionHandlers = new HashMap<Class<? extends Exception>, Handler[]>();
 
-    public Router(ServletConfig servletConfig) {
-        this.servletConfig = servletConfig;
+    public Router(ServletContext servletContext) {
+        this.servletContext = servletContext;
         routes.put(Method.GET, new ArrayList<Route>());
         routes.put(Method.POST, new ArrayList<Route>());
         routes.put(Method.PUT, new ArrayList<Route>());
@@ -76,7 +76,7 @@ public class Router {
         Route route = findRoute(method, request, relativeUri);
 
         if (route == null) {
-            RequestDispatcher rd = servletConfig.getServletContext().getNamedDispatcher("default");
+            RequestDispatcher rd = servletContext.getNamedDispatcher("default");
             HttpServletRequest wrapped = new HttpServletRequestWrapper(request) {
                 public String getServletPath() {
                     return "";

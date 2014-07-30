@@ -4,7 +4,7 @@ import com.altamiracorp.miniweb.Route.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ public class App {
     private Router router;
     private Map<String, Object> config;
 
-    public App(final ServletConfig servletConfig) {
-        router = new Router(servletConfig);
+    public App(final ServletContext servletContext) {
+        router = new Router(servletContext);
         config = new HashMap<String, Object>();
     }
 

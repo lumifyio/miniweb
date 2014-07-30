@@ -7,12 +7,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
@@ -22,23 +20,19 @@ public class RouterTest {
     private Handler exceptionThrowingHandler;
     private HttpServletRequest request;
     private HttpServletResponse response;
-    private ServletConfig servletConfig;
     private RequestDispatcher requestDispatcher;
     private ServletContext servletContext;
     private String path = "/foo";
 
     @Before
     public void before() {
-        servletConfig = mock(ServletConfig.class);
-        router = new Router(servletConfig);
+        servletContext = mock(ServletContext.class);
+        router = new Router(servletContext);
         handler = mock(Handler.class);
         exceptionThrowingHandler = mock(Handler.class);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         requestDispatcher = mock(RequestDispatcher.class);
-        servletContext = mock(ServletContext.class);
-
-        when(servletConfig.getServletContext()).thenReturn(servletContext);
     }
 
     @Test

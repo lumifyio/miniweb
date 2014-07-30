@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +19,13 @@ public class StaticFileHandlerTest {
     public void testStaticFileHander() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        ServletConfig config = mock(ServletConfig.class);
         ServletContext servletContext = mock(ServletContext.class);
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
         HandlerChain chain = new HandlerChain(null);
 
-        when(config.getServletContext()).thenReturn(servletContext);
         when(servletContext.getNamedDispatcher("default")).thenReturn(dispatcher);
 
-        StaticFileHandler handler = new StaticFileHandler(config);
+        StaticFileHandler handler = new StaticFileHandler(servletContext);
         handler.handle(request, response, chain);
 
         verify(servletContext).getNamedDispatcher("default");

@@ -1,7 +1,7 @@
 package com.altamiracorp.miniweb;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -10,12 +10,12 @@ public class StaticFileHandler implements Handler {
     private final RequestDispatcher handler;
     private final String pathInfo;
 
-    public StaticFileHandler(ServletConfig config) {
-        this(config, null);
+    public StaticFileHandler(ServletContext servletContext) {
+        this(servletContext, null);
     }
 
-    public StaticFileHandler(ServletConfig config, String pathInfo) {
-        this.handler = config.getServletContext().getNamedDispatcher("default");
+    public StaticFileHandler(ServletContext servletContext, String pathInfo) {
+        this.handler = servletContext.getNamedDispatcher("default");
         this.pathInfo = pathInfo;
     }
 
