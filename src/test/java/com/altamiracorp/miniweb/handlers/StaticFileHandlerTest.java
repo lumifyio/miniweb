@@ -1,5 +1,7 @@
-package com.altamiracorp.miniweb;
+package com.altamiracorp.miniweb.handlers;
 
+import com.altamiracorp.miniweb.HandlerChain;
+import com.altamiracorp.miniweb.handlers.StaticFileHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

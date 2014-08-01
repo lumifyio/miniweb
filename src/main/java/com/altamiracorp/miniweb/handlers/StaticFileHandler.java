@@ -1,4 +1,7 @@
-package com.altamiracorp.miniweb;
+package com.altamiracorp.miniweb.handlers;
+
+import com.altamiracorp.miniweb.Handler;
+import com.altamiracorp.miniweb.HandlerChain;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
