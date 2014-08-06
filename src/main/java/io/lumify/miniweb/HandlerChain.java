@@ -1,4 +1,4 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -1,7 +1,7 @@
-package com.altamiracorp.miniweb.handlers;
+package io.lumify.miniweb.handlers;
 
-import com.altamiracorp.miniweb.Handler;
-import com.altamiracorp.miniweb.HandlerChain;
+import io.lumify.miniweb.Handler;
+import io.lumify.miniweb.HandlerChain;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;

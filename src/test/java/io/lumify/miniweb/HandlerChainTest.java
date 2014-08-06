@@ -1,4 +1,4 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

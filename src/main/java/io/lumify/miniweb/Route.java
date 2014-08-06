@@ -1,6 +1,6 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
-import com.altamiracorp.miniweb.utils.UrlUtils;
+import io.lumify.miniweb.utils.UrlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 miniweb
 ======
 
-Minimal web framework, implemented in Java, that resembles [node.js](https://github.com/joyent/node)+[express](https://github.com/visionmedia/express).
+Minimal web framework, implemented in Java, resembling [node.js](https://github.com/joyent/node)+[express](https://github.com/visionmedia/express).
 
 License
 -------

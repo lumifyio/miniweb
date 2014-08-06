@@ -1,7 +1,6 @@
-package com.altamiracorp.miniweb.handlers;
+package io.lumify.miniweb.handlers;
 
-import com.altamiracorp.miniweb.HandlerChain;
-import com.altamiracorp.miniweb.handlers.StaticFileHandler;
+import io.lumify.miniweb.HandlerChain;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

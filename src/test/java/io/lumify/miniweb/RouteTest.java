@@ -1,6 +1,5 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
-import com.altamiracorp.miniweb.Route.Method;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,7 @@ public class RouteTest {
 
     @Test
     public void testRouteMiss() {
-        Route r = new Route(Method.GET, path, handler);
+        Route r = new Route(Route.Method.GET, path, handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn("/foo");
@@ -35,7 +34,7 @@ public class RouteTest {
 
     @Test
     public void testExactRouteMatch() {
-        Route r = new Route(Method.GET, path, handler);
+        Route r = new Route(Route.Method.GET, path, handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path);
@@ -45,7 +44,7 @@ public class RouteTest {
 
     @Test
     public void testRouteMatchWithComponents() {
-        Route r = new Route(Method.GET, path + "/{id}", handler);
+        Route r = new Route(Route.Method.GET, path + "/{id}", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/25");
@@ -56,7 +55,7 @@ public class RouteTest {
 
     @Test
     public void testComplexComponentAttributeSetting() {
-        Route r = new Route(Method.GET, path + "/{model}/edit/{_id}", handler);
+        Route r = new Route(Route.Method.GET, path + "/{model}/edit/{_id}", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/person/edit/25");
@@ -68,7 +67,7 @@ public class RouteTest {
 
     @Test
     public void testWithEscapedSlash() {
-        Route r = new Route(Method.GET, path + "/{id}/test", handler);
+        Route r = new Route(Route.Method.GET, path + "/{id}/test", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/12%2F34/test");
@@ -79,7 +78,7 @@ public class RouteTest {
 
     @Test
     public void testComponentAsBaseFilename() {
-        Route r = new Route(Method.GET, path + "/{file}.ext", handler);
+        Route r = new Route(Route.Method.GET, path + "/{file}.ext", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/less.ext");
@@ -89,7 +88,7 @@ public class RouteTest {
     }
 
     public void testWithRegexSpecialCharacters() {
-        Route r = new Route(Method.GET, path + "\\^$.|?*+()[]", handler);
+        Route r = new Route(Route.Method.GET, path + "\\^$.|?*+()[]", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "\\^$.|?*+()[]");
@@ -99,7 +98,7 @@ public class RouteTest {
 
     @Test
     public void testRestStyleUrlWithSpecialCharactersAndKnownTail() {
-        Route r = new Route(Method.GET, path + "/{resourceName}/data.json", handler);
+        Route r = new Route(Route.Method.GET, path + "/{resourceName}/data.json", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/test@test.com/other/data.json");
@@ -110,7 +109,7 @@ public class RouteTest {
 
     @Test
     public void testRestStyleUrlWithSpecialCharacters() {
-        Route r = new Route(Method.GET, path + "/{resourceName*}/{file}.{ext}", handler);
+        Route r = new Route(Route.Method.GET, path + "/{resourceName*}/{file}.{ext}", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/test@test.com/other/less.ext");
@@ -123,7 +122,7 @@ public class RouteTest {
 
     @Test
     public void testRegexRoute() {
-        Route r = new Route(Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
+        Route r = new Route(Route.Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/1283723/end");
@@ -134,7 +133,7 @@ public class RouteTest {
 
     @Test
     public void testRegexRouteNoMatch() {
-        Route r = new Route(Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
+        Route r = new Route(Route.Method.GET, path + "/{resourceName<[0-9]*>}/end", handler);
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getMethod()).thenReturn("GET");
         when(request.getRequestURI()).thenReturn(path + "/128a3723/end");

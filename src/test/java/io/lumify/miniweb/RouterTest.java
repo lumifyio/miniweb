@@ -1,6 +1,5 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
-import com.altamiracorp.miniweb.Route.Method;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +36,8 @@ public class RouterTest {
 
     @Test
     public void testSimpleRoute() throws Exception {
-        router.addRoute(Method.GET, path, handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path, handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
         router.route(request, response);
@@ -47,8 +46,8 @@ public class RouterTest {
 
     @Test
     public void testRouteWithComponent() throws Exception {
-        router.addRoute(Method.GET, path + "/{id}/text", handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path + "/{id}/text", handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "/25/text");
         when(request.getContextPath()).thenReturn("");
         router.route(request, response);
@@ -58,10 +57,10 @@ public class RouterTest {
 
     @Test
     public void testMultipleRoutesWithSamePrefix() throws Exception {
-        router.addRoute(Method.GET, path + "/{id}/text", handler);
-        Route routeRaw = router.addRoute(Method.GET, path + "/{id}/raw", handler);
-        router.addRoute(Method.GET, path + "/{id}", handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path + "/{id}/text", handler);
+        Route routeRaw = router.addRoute(Route.Method.GET, path + "/{id}/raw", handler);
+        router.addRoute(Route.Method.GET, path + "/{id}", handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "/25/raw");
         when(request.getContextPath()).thenReturn("");
         router.route(request, response);
@@ -72,10 +71,10 @@ public class RouterTest {
 
     @Test
     public void testMultipleRoutesWithSamePrefixLastMatch() throws Exception {
-        router.addRoute(Method.GET, path + "/{id}/text", handler);
-        router.addRoute(Method.GET, path + "/{id}/raw", handler);
-        Route defaultRoute = router.addRoute(Method.GET, path + "/{id}", handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path + "/{id}/text", handler);
+        router.addRoute(Route.Method.GET, path + "/{id}/raw", handler);
+        Route defaultRoute = router.addRoute(Route.Method.GET, path + "/{id}", handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "/25/zzz");
         when(request.getContextPath()).thenReturn("");
         router.route(request, response);
@@ -86,8 +85,8 @@ public class RouterTest {
 
     @Test
     public void testRouteMissingDueToMethod() throws Exception {
-        router.addRoute(Method.GET, path, handler);
-        when(request.getMethod()).thenReturn(Method.POST.toString());
+        router.addRoute(Route.Method.GET, path, handler);
+        when(request.getMethod()).thenReturn(Route.Method.POST.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(servletContext.getNamedDispatcher(anyString())).thenReturn(requestDispatcher);
         router.route(request, response);
@@ -96,8 +95,8 @@ public class RouterTest {
 
     @Test
     public void testRouteMissingDueToPath() throws Exception {
-        router.addRoute(Method.GET, path, handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path, handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path + "extra");
         when(request.getContextPath()).thenReturn("");
         when(servletContext.getNamedDispatcher(anyString())).thenReturn(requestDispatcher);
@@ -108,8 +107,8 @@ public class RouterTest {
     @Test
     public void testMultipleRouteHandlers() throws Exception {
         Handler h2 = new TestHandler();
-        router.addRoute(Method.GET, path, h2, handler);
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        router.addRoute(Route.Method.GET, path, h2, handler);
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
         router.route(request, response);
@@ -119,10 +118,10 @@ public class RouterTest {
     @Test
     public void testExceptionHandler() throws Exception {
         Class<? extends Exception> exClass = ArrayStoreException.class;
-        router.addRoute(Method.GET, path, exceptionThrowingHandler);
+        router.addRoute(Route.Method.GET, path, exceptionThrowingHandler);
         router.addExceptionHandler(exClass, new Handler[]{handler});
 
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
         doThrow(exClass).when(exceptionThrowingHandler).handle(eq(request), eq(response), any(HandlerChain.class));
@@ -133,10 +132,10 @@ public class RouterTest {
     @Test(expected = ArrayStoreException.class)
     public void testMissingExceptionHandler() throws Exception {
         Class<? extends Exception> exClass = ArrayStoreException.class;
-        router.addRoute(Method.GET, path, exceptionThrowingHandler);
+        router.addRoute(Route.Method.GET, path, exceptionThrowingHandler);
         router.addExceptionHandler(RuntimeException.class, new Handler[]{handler});
 
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
         doThrow(exClass).when(exceptionThrowingHandler).handle(eq(request), eq(response), any(HandlerChain.class));
@@ -146,10 +145,10 @@ public class RouterTest {
     @Test(expected = ArrayStoreException.class)
     public void testExceptionInExceptionHandler() throws Exception {
         Class<? extends Exception> exClass = ArrayStoreException.class;
-        router.addRoute(Method.GET, path, exceptionThrowingHandler);
+        router.addRoute(Route.Method.GET, path, exceptionThrowingHandler);
         router.addExceptionHandler(exClass, new Handler[] { handler });
 
-        when(request.getMethod()).thenReturn(Method.GET.toString());
+        when(request.getMethod()).thenReturn(Route.Method.GET.toString());
         when(request.getRequestURI()).thenReturn(path);
         when(request.getContextPath()).thenReturn("");
         doThrow(exClass).when(handler).handle(eq(request), eq(response), any(HandlerChain.class));

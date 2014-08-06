@@ -1,6 +1,5 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
-import com.altamiracorp.miniweb.Route.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ public class App {
     }
 
     public void get(String path, Handler... handlers) {
-        router.addRoute(Method.GET, path, handlers);
+        router.addRoute(Route.Method.GET, path, handlers);
     }
 
     public void get(String path, Class<? extends Handler>... classes) {
@@ -35,7 +34,7 @@ public class App {
     }
 
     public void post(String path, Handler... handlers) {
-        router.addRoute(Method.POST, path, handlers);
+        router.addRoute(Route.Method.POST, path, handlers);
     }
 
     public void post(String path, Class<? extends Handler>... classes) {
@@ -48,7 +47,7 @@ public class App {
     }
 
     public void put(String path, Handler... handlers) {
-        router.addRoute(Method.PUT, path, handlers);
+        router.addRoute(Route.Method.PUT, path, handlers);
     }
 
     public void put(String path, Class<? extends Handler>... classes) {
@@ -61,7 +60,7 @@ public class App {
     }
 
     public void delete(String path, Handler... handlers) {
-        router.addRoute(Method.DELETE, path, handlers);
+        router.addRoute(Route.Method.DELETE, path, handlers);
     }
 
     public void delete(String path, Class<? extends Handler>... classes) {

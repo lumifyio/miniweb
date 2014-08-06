@@ -1,6 +1,5 @@
-package com.altamiracorp.miniweb;
+package io.lumify.miniweb;
 
-import com.altamiracorp.miniweb.Route.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,18 +17,18 @@ public class Router {
     private static final Logger LOGGER = LoggerFactory.getLogger(Router.class);
 
     private ServletContext servletContext;
-    private Map<Method, List<Route>> routes = new HashMap<Method, List<Route>>();
+    private Map<Route.Method, List<Route>> routes = new HashMap<Route.Method, List<Route>>();
     Map<Class<? extends Exception>, Handler[]> exceptionHandlers = new HashMap<Class<? extends Exception>, Handler[]>();
 
     public Router(ServletContext servletContext) {
         this.servletContext = servletContext;
-        routes.put(Method.GET, new ArrayList<Route>());
-        routes.put(Method.POST, new ArrayList<Route>());
-        routes.put(Method.PUT, new ArrayList<Route>());
-        routes.put(Method.DELETE, new ArrayList<Route>());
+        routes.put(Route.Method.GET, new ArrayList<Route>());
+        routes.put(Route.Method.POST, new ArrayList<Route>());
+        routes.put(Route.Method.PUT, new ArrayList<Route>());
+        routes.put(Route.Method.DELETE, new ArrayList<Route>());
     }
 
-    public Route addRoute(Method method, String path, Handler... handlers) {
+    public Route addRoute(Route.Method method, String path, Handler... handlers) {
         List<Route> methodRoutes = routes.get(method);
         Route route = new Route(method, path, handlers);
         methodRoutes.add(route);
@@ -55,7 +54,7 @@ public class Router {
     }
 
     private void routeWithExceptionHandling(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Method method = Method.valueOf(request.getMethod().toUpperCase());
+        Route.Method method = Route.Method.valueOf(request.getMethod().toUpperCase());
 
         if (method == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -94,7 +93,7 @@ public class Router {
         chain.next(request, response);
     }
 
-    private Route findRoute(Method method, HttpServletRequest request, String relativeUri) {
+    private Route findRoute(Route.Method method, HttpServletRequest request, String relativeUri) {
         List<Route> potentialRoutes = routes.get(method);
         for (Route route : potentialRoutes) {
             if (route.isMatch(request, relativeUri)) {
@@ -104,7 +103,7 @@ public class Router {
         return null;
     }
 
-    public Map<Method, List<Route>> getRoutes() {
+    public Map<Route.Method, List<Route>> getRoutes() {
         return routes;
     }
 }

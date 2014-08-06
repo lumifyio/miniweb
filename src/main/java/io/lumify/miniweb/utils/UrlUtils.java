@@ -1,4 +1,4 @@
-package com.altamiracorp.miniweb.utils;
+package io.lumify.miniweb.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
