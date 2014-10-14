@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.lumify</groupId>
     <artifactId>miniweb</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.1</version>
 
     <name>Minimal Web Framework</name>
 
