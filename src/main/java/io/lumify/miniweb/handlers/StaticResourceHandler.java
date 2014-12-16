@@ -22,7 +22,6 @@ public class StaticResourceHandler implements Handler {
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerChain chain) throws Exception {
-        classRef = getClass();
         InputStream in = classRef.getResourceAsStream(pathInfo);
         ServletOutputStream out = response.getOutputStream();
         response.setContentType(contentType);
